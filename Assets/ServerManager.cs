@@ -30,7 +30,7 @@ public class ServerManager : MonoBehaviour
     {
         relay = new(debugMessages);
         SubToRelay();
-        relay.onInitializeSuccessful += () => relay.JoinRelay(joinCodeText.text.Trim());
+        relay.onInitializeSuccessful += () => relay.JoinRelay(joinCodeText.text.Substring(0, 6));
     }
     #endregion
 

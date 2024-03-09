@@ -70,35 +70,6 @@ public class NetworkDelegates : NetworkBehaviour
     
     public new void OnDestroy()
     {
-        NetworkManager.Singleton.OnClientStopped -= (isHostServer) =>
-        {
-            if (!isHostServer)
-            {
-                DebugMessage($"Client Stopped. . .");
-                onClientStopped?.Invoke();
-            }
-        };
-        NetworkManager.Singleton.OnServerStopped -= (isHostServer) =>
-        {
-            DebugMessage($"Server Stopped. . .");
-            onServerStopped?.Invoke();
-        };
-        NetworkManager.Singleton.OnClientConnectedCallback -= (clientId) =>
-        {
-            DebugMessage($"Client {clientId} Connected. . .");
-            onClientConnected?.Invoke(clientId);
-        };
-        NetworkManager.Singleton.OnClientDisconnectCallback -= (clientId) =>
-        {
-            DebugMessage($"Client {clientId} Disconnected. . .");
-            onClientDisconnected?.Invoke(clientId);
-        };
-        NetworkManager.Singleton.OnClientStarted -= () =>
-        {
-            DebugMessage($"Client Started. . .");
-            onClientStarted?.Invoke();
-        };
-
         onGameStarted = null;
     }
     #endregion
