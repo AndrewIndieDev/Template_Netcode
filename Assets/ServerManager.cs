@@ -15,6 +15,8 @@ public class ServerManager : MonoBehaviour
     {
         NetworkDelegates.onClientConnected += (clientId) =>
         {
+            if (clientId == 0)
+                return;
             if (NetworkManager.Singleton.IsServer)
             {
                 NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var networkClient);

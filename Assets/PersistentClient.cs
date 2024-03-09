@@ -44,11 +44,12 @@ public class PersistentClient : NetworkBehaviour
         SetupNetworkVariables();
         SetupDelegates();
 
-        nv_DisplayName.Value = $"{AuthenticationService.Instance.PlayerName.Substring(0, AuthenticationService.Instance.PlayerName.IndexOf('#'))}";
+        gameObject.name = $"PersistentClient <Player {OwnerClientId}>";
 
         if (IsOwner)
         {
             DebugMessage("PersistentClient Initialized. . .");
+            nv_DisplayName.Value = $"Player {OwnerClientId}";
             LocalInstance = this;
             if (AllInstances == null)
                 AllInstances = new List<PersistentClient>();

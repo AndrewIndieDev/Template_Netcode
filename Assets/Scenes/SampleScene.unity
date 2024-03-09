@@ -2538,6 +2538,10 @@ PrefabInstance:
       propertyPath: joinCodeText
       value: 
       objectReference: {fileID: 11345317}
+    - target: {fileID: 4726503473354768659, guid: 1d85cac12630da74ca35fd60c60fdadf, type: 3}
+      propertyPath: persistentClientPrefab
+      value: 
+      objectReference: {fileID: 6985005157892205576, guid: b767ca3935d14404c9e75c96d830f033, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
