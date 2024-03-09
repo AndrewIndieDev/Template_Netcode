@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugMessages: 1
   joinCodeText: {fileID: 0}
+  persistentClientPrefab: {fileID: 0}

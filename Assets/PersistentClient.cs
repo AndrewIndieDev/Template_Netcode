@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 
 public class PersistentClient : NetworkBehaviour
@@ -43,7 +44,7 @@ public class PersistentClient : NetworkBehaviour
         SetupNetworkVariables();
         SetupDelegates();
 
-        //nv_DisplayName.Value = $"{AuthenticationService.Instance.PlayerName.Substring(0, AuthenticationService.Instance.PlayerName.IndexOf('#'))}";
+        nv_DisplayName.Value = $"{AuthenticationService.Instance.PlayerName.Substring(0, AuthenticationService.Instance.PlayerName.IndexOf('#'))}";
 
         if (IsOwner)
         {

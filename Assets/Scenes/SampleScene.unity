@@ -2416,10 +2416,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 2503205844
       objectReference: {fileID: 0}
-    - target: {fileID: 4715973126211185847, guid: 9241b6c375e92e949ad6ff2b5e72924a, type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 2544293206
-      objectReference: {fileID: 0}
     - target: {fileID: 6680481351589018233, guid: 9241b6c375e92e949ad6ff2b5e72924a, type: 3}
       propertyPath: m_Name
       value: NetworkDelegates

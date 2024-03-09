@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ServerManager : MonoBehaviour
@@ -7,6 +8,24 @@ public class ServerManager : MonoBehaviour
     [SerializeField] private TMP_Text joinCodeText;
 
     private Relay relay;
+
+    [SerializeField] private GameObject persistentClientPrefab;
+
+    private void Start()
+    {
+        NetworkDelegates.onClientConnected += (clientId) =>
+        {
+            if (NetworkManager.Singleton.IsServer)
+            {
+                NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var networkClient);
+                if (networkClient != null)
+                {
+                    var persistentClient = Instantiate(persistentClientPrefab).GetComponent<PersistentClient>();
+                    persistentClient.NetworkObject.SpawnWithOwnership(clientId);
+                }
+            }
+        };
+    }
 
     #region Button Methods
     public void StartServer()
