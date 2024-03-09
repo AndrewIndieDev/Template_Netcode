@@ -83,6 +83,7 @@ public class PersistentClient : NetworkBehaviour
                 DebugMessage("Spawning a PlayerObject. . .");
                 playerObject = Instantiate(playerObjectPrefab).GetComponent<PlayerObject>();
                 playerObject.transform.position = new Vector3(0, 0, 0);
+                playerObject.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
             }
         }
     }
