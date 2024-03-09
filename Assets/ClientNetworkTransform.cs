@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 
@@ -5,10 +6,10 @@ public class ClientNetworkTransform : NetworkTransform
 {
     private Vector3 previousPosition;
 
-    protected override bool OnIsServerAuthoritative()
-    {
-        return false;
-    }
+    //protected override bool OnIsServerAuthoritative()
+    //{
+    //    return false;
+    //}
 
     private void Start()
     {
