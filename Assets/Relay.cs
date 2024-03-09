@@ -153,7 +153,7 @@ public class Relay
             DebugMessage($"Joining lobby with joincode: {joinCode}. . .");
             JoinAllocation joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
-            RelayServerData serverData = new RelayServerData(joinAllocation, "dtls" /* "wss" = WebGL */);
+            RelayServerData serverData = new RelayServerData(joinAllocation, "dtls");
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(serverData);
 
