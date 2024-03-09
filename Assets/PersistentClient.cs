@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
-//using Unity.Services.Authentication;
 using UnityEngine;
 
 public class PersistentClient : NetworkBehaviour
@@ -77,7 +76,7 @@ public class PersistentClient : NetworkBehaviour
     private void OnGameStarted()
     {
         DebugMessage("OnGameStarted. . .");
-        if (IsOwner)
+        if (IsServer)
         {
             if (playerObject == null)
             {

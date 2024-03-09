@@ -5,6 +5,19 @@ public class NetworkDelegates : NetworkBehaviour
 {
     [SerializeField] private bool debugMessages;
     
+    public static NetworkDelegates Instance { get; private set; }
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
     #region Generic Network Delegates
     public delegate void OnServerStopped();
     public static OnServerStopped onServerStopped;
@@ -95,6 +108,7 @@ public class NetworkDelegates : NetworkBehaviour
     public void OnGameStartedServerRpc()
     {
         DebugMessage($"OnGameStartedServerRpc. . .");
+        onGameStarted?.Invoke();
         OnGameStartedClientRpc();
     }
     [ClientRpc]

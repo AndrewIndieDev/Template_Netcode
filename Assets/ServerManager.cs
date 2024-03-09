@@ -1,7 +1,4 @@
-using System;
 using TMPro;
-using Unity.Services.Authentication;
-using Unity.Services.Core;
 using UnityEngine;
 
 public class ServerManager : MonoBehaviour
@@ -10,28 +7,6 @@ public class ServerManager : MonoBehaviour
     [SerializeField] private TMP_Text joinCodeText;
 
     private Relay relay;
-
-    //private async void Start()
-    //{
-    //    var options = new InitializationOptions();
-    //    //string profileName = $"Test_Profile_{Random.Range(0, 10000)}";
-    //    //options.SetProfile(profileName);
-    //    //DebugMessage($"Profile Name: {profileName}");
-
-    //    await UnityServices.InitializeAsync(options);
-    //    if (UnityServices.State == ServicesInitializationState.Initialized)
-    //        DebugMessage("Unity Services Successfully Initialized. . .");
-    //    else
-    //        DebugMessage("Unity Services Failed to Initialize. . .");
-        
-    //    //AuthenticationService.Instance.SwitchProfile(profileName);
-    //    await AuthenticationService.Instance.SignInAnonymouslyAsync();
-    //    DebugMessage($"{AuthenticationService.Instance.Profile}");
-    //    if (AuthenticationService.Instance.IsSignedIn)
-    //        DebugMessage("Signed in successfully. . .");
-    //    else
-    //        DebugMessage("Failed to sign in. . .");
-    //}
 
     #region Button Methods
     public void StartServer()
@@ -55,7 +30,7 @@ public class ServerManager : MonoBehaviour
     {
         relay = new(debugMessages);
         SubToRelay();
-        relay.onInitializeSuccessful += () => relay.JoinRelay(joinCodeText.text);
+        relay.onInitializeSuccessful += () => relay.JoinRelay(joinCodeText.text.Trim());
     }
     #endregion
 
