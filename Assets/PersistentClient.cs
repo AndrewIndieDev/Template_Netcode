@@ -7,7 +7,7 @@ using UnityEngine;
 public class PersistentClient : NetworkBehaviour
 {
     public static PersistentClient LocalInstance { get; private set; }
-    public static List<PersistentClient> AllInstances { get; private set; }
+    public static Dictionary<ulong, PersistentClient> AllInstances { get; private set; }
     public PlayerObject PlayerObject { get { return playerObject; } }
 
     [SerializeField] private bool debugMessages;
@@ -52,8 +52,8 @@ public class PersistentClient : NetworkBehaviour
             nv_DisplayName.Value = $"Player {OwnerClientId}";
             LocalInstance = this;
             if (AllInstances == null)
-                AllInstances = new List<PersistentClient>();
-            AllInstances.Add(this);
+                AllInstances = new();
+            AllInstances.Add(OwnerClientId, this);
         }
     }
     public override void OnNetworkDespawn()

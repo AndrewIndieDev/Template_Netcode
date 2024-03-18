@@ -1,4 +1,3 @@
-using System;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
@@ -14,16 +13,16 @@ public class Relay
     public event OnInitializeSuccessful onInitializeSuccessful;
     public delegate void OnInitializeFail();
     public event OnInitializeFail onInitializeFail;
-    public delegate void OnCreateSuccessful();
+    public delegate void OnCreateSuccessful(string joinCode);
     public event OnCreateSuccessful onCreateSuccessful;
     public delegate void OnCreateFail(string message);
     public event OnCreateFail onCreateFail;
-    public delegate void OnJoinSuccessful();
+    public delegate void OnJoinSuccessful(string joinCode);
     public event OnJoinSuccessful onJoinSuccessful;
     public delegate void OnJoinFail(string message);
     public event OnJoinFail onJoinFail;
-    public delegate void OnLeaveServer();
-    public event OnLeaveServer onLeaveServer;
+    public delegate void OnLeftServer();
+    public event OnLeftServer onLeftServer;
 
     private bool debugMessages;
 
@@ -31,33 +30,45 @@ public class Relay
     public Relay(bool debugMode = false)
     {
         debugMessages = debugMode;
-        Initialize();
     }
-    private async void Initialize()
+    public async void Initialize()
     {
-        try
+        if (UnityServices.State == ServicesInitializationState.Uninitialized)
         {
-            DebugMessage("Initializing Unity Services. . .");
-            await UnityServices.InitializeAsync();
-            DebugMessage("Completed Successfully. . .");
-        }
-        catch (System.Exception e)
-        {
-            DebugMessage($"Failed to initialize Unity Services. . . {e.Message}");
-            onInitializeFail?.Invoke();
-        }
+            try
+            {
+                DebugMessage("Initializing Unity Services. . .");
+                var options = new InitializationOptions();
+#if UNITY_EDITOR
+                if (ParrelSync.ClonesManager.IsClone())
+                {
+                    string customArgument = ParrelSync.ClonesManager.GetArgument();
+                    options.SetProfile(customArgument);
+                }
+#endif
+                await UnityServices.InitializeAsync(options);
+                DebugMessage("Completed Successfully. . .");
+            }
+            catch (System.Exception e)
+            {
+                DebugMessage($"Failed to initialize Unity Services. . . {e.Message}");
+                onInitializeFail?.Invoke();
+                return;
+            }
 
-        try
-        {
-            DebugMessage("Signing in annonymously. . .");
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            DebugMessage("Signed in successfully. . .");
-            DebugMessage($"ID: {AuthenticationService.Instance.PlayerId}");
-        }
-        catch (System.Exception e)
-        {
-            DebugMessage($"Failed to sign in. . . {e.Message}");
-            onInitializeFail?.Invoke();
+            try
+            {
+                DebugMessage("Signing in annonymously. . .");
+                await AuthenticationService.Instance.SignInAnonymouslyAsync();
+                DebugMessage("Signed in successfully. . .");
+                DebugMessage($"ID: {AuthenticationService.Instance.PlayerId}");
+            }
+            catch (System.Exception e)
+            {
+                DebugMessage($"Failed to sign in. . . {e.Message}");
+                onInitializeFail?.Invoke();
+                return;
+            }
         }
 
         NetworkManager.Singleton.OnClientStopped += (isHostServer) =>
@@ -105,7 +116,7 @@ public class Relay
                 DebugMessage($"Client {clientId} disconnected. . .");
             };
 
-            onCreateSuccessful?.Invoke();
+            onCreateSuccessful?.Invoke(joinCode);
         }
         catch (RelayServiceException e)
         {
@@ -138,7 +149,7 @@ public class Relay
                 DebugMessage($"Client {clientId} disconnected. . .");
             };
 
-            onCreateSuccessful?.Invoke();
+            onCreateSuccessful?.Invoke(joinCode);
         }
         catch (RelayServiceException e)
         {
@@ -159,7 +170,7 @@ public class Relay
 
             NetworkManager.Singleton.StartClient();
 
-            onJoinSuccessful?.Invoke();
+            onJoinSuccessful?.Invoke(joinCode);
         }
         catch (RelayServiceException e)
         {
@@ -171,7 +182,7 @@ public class Relay
     {
         // TODO: Check if this is a server, host, or client. May be able to migrate the host to another client.
         NetworkManager.Singleton.Shutdown();
-        onLeaveServer?.Invoke();
+        onLeftServer?.Invoke();
 
         onInitializeSuccessful = null;
         onInitializeFail = null;
@@ -179,7 +190,7 @@ public class Relay
         onCreateFail = null;
         onJoinSuccessful = null;
         onJoinFail = null;
-        onLeaveServer = null;
+        onLeftServer = null;
     }
     #endregion
 

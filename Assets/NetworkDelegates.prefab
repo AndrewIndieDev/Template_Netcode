@@ -48,12 +48,12 @@ MonoBehaviour:
   GlobalObjectIdHash: 2503205844
   InScenePlacedSourceGlobalObjectIdHash: 2544293206
   AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
+  SynchronizeTransform: 0
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
+  AutoObjectParentSync: 0
 --- !u!114 &6966947691772927449
 MonoBehaviour:
   m_ObjectHideFlags: 0
