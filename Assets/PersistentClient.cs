@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.Services.Authentication;
 using UnityEngine;
 
 public class PersistentClient : NetworkBehaviour
@@ -42,7 +41,6 @@ public class PersistentClient : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         SetupNetworkVariables();
-        SetupDelegates();
 
         gameObject.name = $"PersistentClient <Player {OwnerClientId}>";
 
@@ -64,17 +62,6 @@ public class PersistentClient : NetworkBehaviour
     #endregion
 
     #region Delegates
-    private void SetupDelegates(bool onDestroy = false)
-    {
-        if (!onDestroy)
-        {
-            NetworkDelegates.onGameStarted += OnGameStarted;
-        }
-        else
-        {
-            NetworkDelegates.onGameStarted -= OnGameStarted;
-        }
-    }
     private void OnGameStarted()
     {
         DebugMessage("OnGameStarted. . .");
