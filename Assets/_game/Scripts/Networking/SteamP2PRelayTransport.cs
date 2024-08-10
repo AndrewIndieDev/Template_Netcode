@@ -1,12 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
-
 using Unity.Netcode;
 using UnityEngine;
-
 using Steamworks;
 using Steamworks.Data;
 
@@ -15,7 +10,7 @@ public class SteamP2PRelayTransport : NetworkTransport
     /// <summary>
     /// For clients, this is the steam id we want to connect to.
     /// </summary>
-    public ulong serverId = 0;
+    public ulong serverId = 76561198173399099;
 
     /// <summary>
     /// Enables additional debug logs.
@@ -26,8 +21,7 @@ public class SteamP2PRelayTransport : NetworkTransport
     {
         SteamP2PRelayTransport transport;
 
-	// TODO: Increase buffer size.
-        byte[] buffer = new byte[2048];
+        byte[] buffer = new byte[2];
         ArraySegment<byte> emptyPayload = new ArraySegment<byte>();
 
         public ClientCallbacks(SteamP2PRelayTransport transport)
@@ -68,7 +62,10 @@ public class SteamP2PRelayTransport : NetworkTransport
         {
             Debug.Log("ClientCallbacks: OnMessage");
 
-            // TODO: Assert that size <= buffer size
+            while (buffer.Length < size)
+            {
+                buffer = new byte[buffer.Length * 2];
+            }
             Marshal.Copy(data, buffer, 0, size);
 
             transport.InvokeOnTransportEvent(NetworkEvent.Data, transport.ServerClientId, new ArraySegment<byte>(buffer, 0, size), Time.realtimeSinceStartup);
@@ -79,8 +76,7 @@ public class SteamP2PRelayTransport : NetworkTransport
     {
         SteamP2PRelayTransport transport;
 
-	// TODO: Increase buffer size.
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[2];
         ArraySegment<byte> emptyPayload = new ArraySegment<byte>();
 
         public ServerCallbacks(SteamP2PRelayTransport transport)
@@ -124,7 +120,10 @@ public class SteamP2PRelayTransport : NetworkTransport
         {
             Debug.Log("ServerCallbacks: OnMessage");
 
-            // TODO: Assert that size <= buffer size
+            while (buffer.Length < size)
+            {
+                buffer = new byte[buffer.Length * 2];
+            }
             Marshal.Copy(data, buffer, 0, size);
 
             transport.InvokeOnTransportEvent(NetworkEvent.Data, connection.Id, new ArraySegment<byte>(buffer, 0, size), Time.realtimeSinceStartup);
@@ -265,7 +264,7 @@ public class SteamP2PRelayTransport : NetworkTransport
         Debug.Log("Shutdown.");
         socketManager?.Close();
         clientConnection?.Close();
-        serverId = 0;
+        //serverId = 0;
         //SteamClient.Shutdown();
     }
 

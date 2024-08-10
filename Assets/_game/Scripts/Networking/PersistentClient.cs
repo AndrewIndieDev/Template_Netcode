@@ -9,8 +9,11 @@ public class PersistentClient : NetworkBehaviour
     public static Dictionary<ulong, PersistentClient> AllInstances { get; private set; }
     public PlayerObject PlayerObject { get { return playerObject; } }
 
-    [SerializeField] private bool debugMessages;
-    [SerializeField] private GameObject playerObjectPrefab;
+    [Header("Debugging")]
+    [SerializeField] private bool showDebugMessages;
+
+    [Header("References")]
+    [SerializeField] private NetworkObject playerObjectPrefab;
     [SerializeField] private PlayerObject playerObject;
 
     #region Network Variables
@@ -52,46 +55,34 @@ public class PersistentClient : NetworkBehaviour
             if (AllInstances == null)
                 AllInstances = new();
             AllInstances.Add(OwnerClientId, this);
+            RPCManager.Instance.ExecuteInOrder(CreatePlayerObjectRpc);
         }
     }
     public override void OnNetworkDespawn()
     {
         DebugMessage("OnNetworkDespawn. . .");
         SetupNetworkVariables(onDestroy: true);
+        if (LocalInstance == this)
+            AllInstances.Clear();
     }
     #endregion
 
-    #region Delegates
-    private void OnGameStarted()
+    #region RPCs
+    [Rpc(SendTo.Everyone)]
+    public void CreatePlayerObjectRpc()
     {
-        DebugMessage("OnGameStarted. . .");
-        if (IsServer)
-        {
-            if (playerObject == null)
-            {
-                DebugMessage("Spawning a PlayerObject. . .");
-                playerObject = Instantiate(playerObjectPrefab).GetComponent<PlayerObject>();
-                playerObject.transform.position = new Vector3(0, 0, 0);
-                playerObject.GetComponent<NetworkObject>().SpawnWithOwnership(OwnerClientId);
-            }
-        }
-    }
-    #endregion
-
-    #region Public Methods
-    public void SetPlayerObject(PlayerObject playerObject)
-    {
-        DebugMessage("SetPlayerObject. . .");
         if (IsOwner)
         {
-            this.playerObject = playerObject;
+            //playerObject = Instantiate(playerObjectPrefab).GetComponent<PlayerObject>();
+            NetworkManager.Singleton.SpawnManager.InstantiateAndSpawn(playerObjectPrefab, OwnerClientId);
         }
+        DebugMessage("Created a PlayerObject. . .");
     }
     #endregion
 
     private void DebugMessage(string message)
     {
-        if (debugMessages)
+        if (showDebugMessages)
         {
             Debug.Log($"PERSISTENTCLIENT <{OwnerClientId}> :: {message}");
         }

@@ -66,6 +66,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22349ec791646bc4faf32ed1d92fb2f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMessages: 1
-  playerObjectPrefab: {fileID: 1561571487133428153, guid: bde7c699c0ee681478c662d21e95dcd2, type: 3}
+  showDebugMessages: 0
+  playerObjectPrefab: {fileID: 3875750216105917037, guid: bde7c699c0ee681478c662d21e95dcd2, type: 3}
   playerObject: {fileID: 0}
